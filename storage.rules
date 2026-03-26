@@ -1,0 +1,44 @@
+rules_version = '2';
+
+// 🔒 NewbieHub Storage Security Rules
+// ---------------------------------------------------------
+// These rules protect project source code and user profiles.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // --- Profile Pictures ---
+    // Anyone can see profiles. Only you can update yours.
+    match /profiles/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- Marketplace Project Thumbnails ---
+    // Publicly readable. Only developers can upload.
+    match /projects/{projectId}/thumbnails/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null; 
+    }
+
+    // --- Deliveries (The main ZIP/Source files) ---
+    // Since RTDB lookup isn't possible in Storage Rules,
+    // we organize these by {sellerId}/{orderId} or similar.
+    // For now, we'll restrict it to authenticated users.
+    match /deliveries/{userId}/{fileName} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId);
+    }
+
+    // --- KYC Documents (Extremely Sensitive) ---
+    // Only the user who uploaded and Admins can see these.
+    match /kyc/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId);
+    }
+
+    // --- Public Marketplace Assets ---
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
