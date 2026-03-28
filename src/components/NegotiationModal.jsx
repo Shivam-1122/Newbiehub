@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, DollarSign, Loader } from 'lucide-react';
+import { X, Send, IndianRupee, Loader } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase';
 import { ref, push, set } from 'firebase/database';
@@ -69,7 +69,7 @@ export default function NegotiationModal({ project, onClose }) {
             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
             <h2 style={{ marginBottom: '0.5rem', color: 'var(--success)' }}>Offer Sent!</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              Your offer of ${budget} has been sent to {project.authorName || 'the developer'}. They will respond shortly.
+              Your offer of ₹{budget} has been sent to {project.authorName || 'the developer'}. They will respond shortly.
             </p>
             <button className="btn-primary" onClick={onClose} style={{ padding: '0.8rem 2rem' }}>Close</button>
           </div>
@@ -97,7 +97,7 @@ export default function NegotiationModal({ project, onClose }) {
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>Proposed Budget (₹ INR):</label>
                 <div style={{ position: 'relative' }}>
-                  <DollarSign style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={20} />
+                  <IndianRupee style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={20} />
                   <input 
                     type="number" 
                     className="form-input"

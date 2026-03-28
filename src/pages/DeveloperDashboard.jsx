@@ -162,7 +162,7 @@ export default function DeveloperDashboard() {
             link: '/buyer/projects'
           });
         }
-        setCounterInputs({ ...counterInputs, [offerId]: '' });
+        setCounterInputs({ ...counterInputs, [offerId]: '', [offerId + '_show']: false });
       } catch (error) { console.error(error); }
     }
   };
@@ -227,6 +227,28 @@ export default function DeveloperDashboard() {
                         <span style={{ color: 'var(--warning)', fontWeight: 'bold' }}>{getCurrencySymbol()}{offer.status === 'countered' ? offer.counterBudget : offer.budget}</span>
                       </div>
                       <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.9rem' }}>Buyer: @{offer.buyerName || 'user'} | {offer.deadlineDays} Days</p>
+
+                      {counterInputs[offer.id + '_show'] && (
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                          <input 
+                            type="number" 
+                            className="form-input" 
+                            placeholder="Counter Amount (₹)"
+                            style={{ flex: 1, padding: '0.4rem', fontSize: '0.9rem' }}
+                            value={counterInputs[offer.id] || ''}
+                            onChange={(e) => setCounterInputs({ ...counterInputs, [offer.id]: e.target.value })}
+                          />
+                          <button 
+                            className="btn-primary" 
+                            style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}
+                            onClick={() => handleCounterOffer(offer.id)}
+                            disabled={!counterInputs[offer.id]}
+                          >
+                            Send
+                          </button>
+                        </div>
+                      )}
+
                       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }} onClick={() => handleAcceptOffer(offer.id)}>Accept</button>
                         <button className="btn-outline" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }} onClick={() => setCounterInputs({ ...counterInputs, [offer.id + '_show']: true })}>Counter</button>

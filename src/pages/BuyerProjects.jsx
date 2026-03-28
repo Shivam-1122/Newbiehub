@@ -49,9 +49,12 @@ export default function BuyerProjects() {
     return () => { unsubscribeOffers(); unsubscribeProjects(); };
   }, [user]);
 
-  const handleAcceptCounter = async (offerId) => {
+  const handleAcceptCounter = async (offerId, counterBudget) => {
     try {
-      await update(ref(db, `offers/${offerId}`), { status: 'accepted' });
+      await update(ref(db, `offers/${offerId}`), { 
+        status: 'accepted',
+        budget: Number(counterBudget)
+      });
     } catch (error) {
       console.error('Error accepting counter:', error);
     }
@@ -275,7 +278,7 @@ export default function BuyerProjects() {
                 
                 {p.status === 'countered' && (
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn-primary" onClick={() => handleAcceptCounter(p.id)}>Accept</button>
+                    <button className="btn-primary" onClick={() => handleAcceptCounter(p.id, p.counterBudget)}>Accept</button>
                     <button className="btn-outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }} onClick={() => handleDeclineOffer(p.id)}>Decline</button>
                   </div>
                 )}
